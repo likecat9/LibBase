@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BaseLibrary</string>
+    <string name="text_exit_app">再按一次返回键退出！</string>
+    <string name="text_search">搜索</string>
+</resources>
