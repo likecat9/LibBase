@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B388FF"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.my.baselibrary.widget.HorizontalMoreNestedScrollView
+            android:id="@+id/view_more"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="#A7FFEB"
+            android:orientation="horizontal">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_h"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/view_end"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="#FF80AB">
+
+                <TextView
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/tv_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="1"
+                    android:gravity="center_horizontal" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.my.baselibrary.widget.HorizontalMoreNestedScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
