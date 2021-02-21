@@ -1,10 +1,10 @@
 package com.my.baselibrary.widget
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import android.view.ViewConfiguration
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.NestedScrollingParent
@@ -58,9 +58,7 @@ class HorizontalMoreNestedScrollView : LinearLayout, NestedScrollingParent {
     private lateinit var txtMoreView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var mLayoutManager: LinearLayoutManager
-    private var mTouchSlop = 0
-    private var mMaximumVelocity = 0
-    private var mMinimumVelocity = 0
+    private val animator = ObjectAnimator.ofFloat(this, "mScrollX2", scrollX.toFloat(), 0f)
     private var mEndViewWidth = 0
     private var mOnMoreListener: (() -> Unit)? = null
     fun setOnMoreListener(listener: (() -> Unit)?) {
@@ -71,6 +69,13 @@ class HorizontalMoreNestedScrollView : LinearLayout, NestedScrollingParent {
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr)
 
+    var mScrollX2: Float = 0f
+        set(value) {
+            Log.d(TAG, "set mScrollX2: $value")
+            this.scrollX = value.toInt()
+            field = value
+        }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
 
@@ -78,22 +83,18 @@ class HorizontalMoreNestedScrollView : LinearLayout, NestedScrollingParent {
         txtMoreView = findViewById(R.id.tv_more)
         recyclerView = findViewById(R.id.recycler_view_h)
 
-        mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        mMaximumVelocity = ViewConfiguration.get(context).scaledMaximumFlingVelocity
-        mMinimumVelocity = ViewConfiguration.get(context).scaledMinimumFlingVelocity
-
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         mEndViewWidth = endView.measuredWidth
         mLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+
     }
 
 
-    private var mScrollToX = 0
     override fun scrollTo(x: Int, y: Int) {
-        mScrollToX = x
+        var mScrollToX = x
 
         if (mScrollToX > mEndViewWidth) {
             mScrollToX = mEndViewWidth
@@ -115,6 +116,10 @@ class HorizontalMoreNestedScrollView : LinearLayout, NestedScrollingParent {
         val hiddenEnd = dx < 0 && scrollX <= mEndViewWidth && scrollX > 0
 
         if (showEnd || hiddenEnd && mLayoutManager.findLastCompletelyVisibleItemPosition() + 1 == mLayoutManager.itemCount) {
+            if (animator.isRunning) {
+                animator.cancel()
+            }
+
             scrollBy(dx / 2, 0)
             consumed[0] = dx
 
@@ -135,7 +140,9 @@ class HorizontalMoreNestedScrollView : LinearLayout, NestedScrollingParent {
             if (scrollX > mEndViewWidth * 0.7) {
                 mOnMoreListener?.invoke()
             }
-            scrollBy(-scrollX, 0)
+
+            animator.setFloatValues(scrollX.toFloat(),0f)
+            animator.start()
         }
     }
 }
